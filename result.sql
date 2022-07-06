@@ -69,16 +69,16 @@ FROM ProductCategories AS productXCategory
 /*
 	Создаем дополительное поле в таблице Product.
 	+: Отсутствие доп.таблицы
-	-: Отсутствует встроенная проверка уникальности, нужна доп. реализация
+	-: Отсутствует встроенная проверка уникальности, нужна доп. реализация.
 */
 
-CREATE TABLE Products (
+CREATE TABLE Products2 (
 	Id INT PRIMARY KEY,
 	Name NVARCHAR(128),
 	Categories NVARCHAR(MAX) -- массив JSON
 );
 
-INSERT INTO Products (Id, Name, Categories)
+INSERT INTO Products2 (Id, Name, Categories)
 VALUES
 	(1, 'НИ СЫ', '[2]'),
 	(2, 'Грокаем алгоритмы', '[1,3]'),
@@ -86,19 +86,9 @@ VALUES
 	(4, 'Война и Мир', '[]'),
 	(5, 'Азбука', '[3]');
 
-CREATE TABLE Categories (
-	Id INT PRIMARY KEY,
-	Name NVARCHAR(128)
-);
-
-INSERT INTO Categories
-VALUES
-	(1, 'It'),
-	(2, 'Мотивашки'),
-	(3, 'Детские');
 
 SELECT 
 	product.Name, categories.Name
-FROM Products AS product
+FROM Products2 AS product
 	OUTER APPLY OPENJSON(product.Categories) AS categoriesList
 	LEFT JOIN Categories AS categories ON categories.Id = categoriesList.value
